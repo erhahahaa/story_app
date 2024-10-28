@@ -1,7 +1,7 @@
 package dev.erhahahaa.storyapp.data.api
 
 import dev.erhahahaa.storyapp.BuildConfig
-import dev.erhahahaa.storyapp.utils.extensions.toMediaType
+import okhttp3.MediaType.Companion.toMediaType
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
 import retrofit2.Retrofit

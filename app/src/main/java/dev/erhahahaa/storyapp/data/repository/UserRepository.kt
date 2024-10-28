@@ -4,7 +4,8 @@ import dev.erhahahaa.storyapp.data.api.ApiService
 import dev.erhahahaa.storyapp.data.model.LoginResponse
 import dev.erhahahaa.storyapp.data.model.RegisterResponse
 import dev.erhahahaa.storyapp.data.prefs.UserPreferences
-import kotlinx.coroutines.flow.Flow
+import dev.erhahahaa.storyapp.utils.extensions.parseError
+import retrofit2.HttpException
 
 class UserRepository
 private constructor(
@@ -12,38 +13,28 @@ private constructor(
   private val userPreferences: UserPreferences,
 ) {
 
-  suspend fun login(email: String, password: String): Result<LoginResponse> {
+  suspend fun login(email: String, password: String): LoginResponse {
     return try {
-      val response = apiService.login(email, password)
-      if (!response.error) {
-        Result.success(response)
-      } else {
-        Result.failure(Throwable(response.message))
+      val res = apiService.login(email, password)
+      if (!res.error) {
+        res.data?.let { userPreferences.saveSession(it.token) }
       }
-    } catch (e: Exception) {
-      Result.failure(e)
+      res
+    } catch (e: HttpException) {
+      e.parseError<LoginResponse>()
     }
   }
 
-  suspend fun register(name: String, email: String, password: String): Result<RegisterResponse> {
+  suspend fun register(name: String, email: String, password: String): RegisterResponse {
     return try {
-      val response = apiService.register(name, email, password)
-      if (!response.error) {
-        Result.success(response)
-      } else {
-        Result.failure(Throwable(response.message))
-      }
-    } catch (e: Exception) {
-      Result.failure(e)
+      apiService.register(name, email, password)
+    } catch (e: HttpException) {
+      e.parseError<RegisterResponse>()
     }
   }
 
-  fun getToken(): Flow<String?> {
+  suspend fun getToken(): String? {
     return userPreferences.getToken()
-  }
-
-  suspend fun saveToken(token: String) {
-    userPreferences.saveSession(token)
   }
 
   suspend fun clearSession() {

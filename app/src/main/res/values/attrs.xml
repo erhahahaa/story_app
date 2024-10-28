@@ -1,0 +1,30 @@
+<resources>
+  <declare-styleable name="Button">
+    <attr name="text" format="string" />
+    <attr name="textColorEnabled" format="color" />
+    <attr name="textColorDisabled" format="color" />
+    <attr name="textSizeCustom" format="dimension" />
+    <attr name="paddingVertical" format="dimension" />
+    <attr name="paddingHorizontal" format="dimension" />
+    <attr name="buttonEnabled" format="boolean" />
+  </declare-styleable>
+
+  <declare-styleable name="TextInput">
+    <attr name="labelText" format="string" />
+    <attr name="hintText" format="string" />
+    <attr name="inputType" format="integer">
+      <flag name="none" value="0x00000000" />
+      <flag name="text" value="0x00000001" />
+      <flag name="textPersonName" value="0x00000061" />
+      <flag name="textEmailAddress" value="0x00000021" />
+      <flag name="textPassword" value="0x00000081" />
+    </attr>
+    <attr name="imeOptions" format="integer">
+      <flag name="actionNext" value="5" />
+      <flag name="actionDone" value="6" />
+    </attr>
+    <attr name="autofillHints" format="string" />
+    <attr name="selectAllOnFocus" format="boolean" />
+    <attr name="maxLines" format="integer" />
+  </declare-styleable>
+</resources>

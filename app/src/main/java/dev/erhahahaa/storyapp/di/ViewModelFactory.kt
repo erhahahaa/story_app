@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import dev.erhahahaa.storyapp.data.repository.StoryRepository
 import dev.erhahahaa.storyapp.data.repository.UserRepository
 import dev.erhahahaa.storyapp.viewmodel.LoginViewModel
+import dev.erhahahaa.storyapp.viewmodel.MainViewModel
 import dev.erhahahaa.storyapp.viewmodel.RegisterViewModel
 import dev.erhahahaa.storyapp.viewmodel.StoryViewModel
 
@@ -21,6 +22,8 @@ class ViewModelFactory(
       return RegisterViewModel(userRepository) as T
     } else if (modelClass.isAssignableFrom(StoryViewModel::class.java)) {
       return StoryViewModel(storyRepository) as T
+    } else if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+      return MainViewModel(userRepository) as T
     }
     throw IllegalArgumentException("Unknown ViewModel class")
   }

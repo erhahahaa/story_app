@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:padding="16dp"
+  tools:context=".ui.login.LoginActivity">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+      android:id="@+id/iv_login_logo"
+      android:layout_width="250dp"
+      android:layout_height="250dp"
+      android:layout_marginBottom="16dp"
+      android:contentDescription="@string/sign_in"
+      android:src="@drawable/sign_in"
+      app:layout_constraintBottom_toTopOf="@id/tv_login_title"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+      android:id="@+id/tv_login_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/login"
+      android:textSize="24sp"
+      android:textStyle="bold"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/iv_login_logo" />
+
+    <dev.erhahahaa.storyapp.ui.customview.TextInput
+      android:id="@+id/ed_login_email"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      android:imeOptions="actionNext"
+      app:autofillHints="emailAddress"
+      app:hintText="@string/enter_email"
+      app:inputType="textEmailAddress"
+      app:labelText="@string/prompt_email"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/tv_login_title"
+      app:selectAllOnFocus="true" />
+
+    <dev.erhahahaa.storyapp.ui.customview.TextInput
+      android:id="@+id/ed_login_password"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      android:imeOptions="actionDone"
+      app:autofillHints="password"
+      app:hintText="@string/enter_password"
+      app:inputType="textPassword"
+      app:labelText="@string/prompt_password"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/ed_login_email"
+      app:selectAllOnFocus="true" />
+
+    <dev.erhahahaa.storyapp.ui.customview.Button
+      android:id="@+id/btn_login"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:enabled="false"
+      android:text="@string/login"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/ed_login_password" />
+
+    <TextView
+      android:id="@+id/tv_go_to_register"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text="@string/navigate_to_register"
+      android:textColor="@android:color/holo_blue_dark"
+      android:textSize="14sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/btn_login" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

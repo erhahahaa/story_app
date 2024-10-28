@@ -32,10 +32,10 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
   }
-  kotlinOptions { jvmTarget = "1.8" }
+  kotlinOptions { jvmTarget = "11" }
 }
 
 val mockitoAgent = configurations.create("mockitoAgent")
@@ -47,6 +47,10 @@ dependencies {
   implementation(libs.material)
   implementation(libs.androidx.activity)
   implementation(libs.androidx.constraintlayout)
+  implementation(libs.androidx.annotation)
+  implementation(libs.androidx.lifecycle.livedata.ktx)
+  implementation(libs.androidx.navigation.fragment.ktx)
+  implementation(libs.androidx.navigation.ui.ktx)
   testImplementation(libs.junit)
   testImplementation(libs.junit.jupiter)
   androidTestImplementation(libs.androidx.junit)
@@ -59,6 +63,7 @@ dependencies {
   implementation("com.squareup.retrofit2:retrofit:2.11.0")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
   implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.11.0")
+  implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
   //  Storage dependencies
   implementation("androidx.datastore:datastore-preferences:1.1.1")

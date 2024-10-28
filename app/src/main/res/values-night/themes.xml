@@ -1,7 +1,15 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Base.Theme.StoryApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-    </style>
+  <!-- Base application theme. -->
+  <style name="Base.Theme.StoryApp" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Primary -->
+    <item name="colorPrimary">@color/indigo500</item>
+    <item name="colorPrimaryVariant">@color/indigo700</item>
+    <item name="colorOnPrimary">@color/black</item>
+    <!-- Secondary -->
+    <item name="colorSecondary">@color/cyan500</item>
+    <item name="colorSecondaryVariant">@color/cyan700</item>
+    <item name="colorOnSecondary">@color/black</item>
+  </style>
+
+
 </resources>

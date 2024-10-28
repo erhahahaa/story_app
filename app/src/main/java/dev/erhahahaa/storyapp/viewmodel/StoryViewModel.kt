@@ -4,22 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.erhahahaa.storyapp.data.model.RegisterResponse
-import dev.erhahahaa.storyapp.data.model.StoryModel
+import dev.erhahahaa.storyapp.data.model.EmptyResponse
+import dev.erhahahaa.storyapp.data.model.StoriesResponse
 import dev.erhahahaa.storyapp.data.repository.StoryRepository
 import java.io.File
 import kotlinx.coroutines.launch
 
 class StoryViewModel(private val storyRepository: StoryRepository) : ViewModel() {
 
-  private val _stories = MutableLiveData<Result<List<StoryModel>>>()
-  val stories: LiveData<Result<List<StoryModel>>> = _stories
+  private val _stories = MutableLiveData<StoriesResponse>()
+  val stories: LiveData<StoriesResponse> = _stories
 
-  private val _addStoryResult = MutableLiveData<Result<RegisterResponse>>()
-  val addStoryResult: LiveData<Result<RegisterResponse>> = _addStoryResult
+  private val _addStoryResult = MutableLiveData<EmptyResponse>()
+  val addStoryResult: LiveData<EmptyResponse> = _addStoryResult
 
   fun getStories() {
-    viewModelScope.launch { storyRepository.getStories().collect { _stories.value = it } }
+    viewModelScope.launch {
+      val result = storyRepository.getStories()
+      _stories.postValue(result)
+    }
   }
 
   fun addStory(file: File, description: String, lat: Double, lon: Double) {

@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 class LoginResultTest {
   @Test
   fun `test LoginResult serialization`() {
-    val loginResult =
-      LoginResult(userId = "asdf-asdf-asdf-asdf", name = "Test User", email = "john@gmail.com")
+    val loginResult = LoginResult(userId = "asdf-asdf-asdf-asdf", name = "Test User", token = "ey")
     val json = Json.encodeToString(LoginResult.serializer(), loginResult)
     assertNotNull(json)
     assertTrue(json.contains("Test User"))

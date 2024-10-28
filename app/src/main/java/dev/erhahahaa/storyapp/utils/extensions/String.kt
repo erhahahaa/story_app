@@ -1,17 +1,22 @@
 package dev.erhahahaa.storyapp.utils.extensions
 
-import java.io.File
-import okhttp3.MediaType
+import android.util.Patterns
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
-
-fun String.toMediaType(): MediaType {
-  return MediaType.get(this)
-}
+import okhttp3.RequestBody.Companion.toRequestBody
 
 fun String.toRequestBody(contentType: String = "text/plain"): RequestBody {
-  return RequestBody.create(contentType.toMediaType(), this)
+  return this.toRequestBody(contentType.toMediaType())
 }
 
-fun File.asRequestBody(contentType: String = "image/jpeg"): RequestBody {
-  return RequestBody.create(contentType.toMediaType(), this)
+fun String.isValidName(): Boolean {
+  return isNotBlank() && length >= 3
+}
+
+fun String.isValidEmail(): Boolean {
+  return isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
+}
+
+fun String.isValidPassword(): Boolean {
+  return length >= 8
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:state_focused="true" android:drawable="@drawable/focused_text_input" />
+  <item android:state_enabled="false" android:drawable="@drawable/disabled_text_input" />
+  <item android:drawable="@drawable/default_text_input" />
+</selector>

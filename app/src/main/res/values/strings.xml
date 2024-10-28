@@ -1,3 +1,27 @@
 <resources>
-    <string name="app_name">Story App</string>
+  <string name="app_name">Story App</string>
+  <string name="register">Register</string>
+  <string name="prompt_email">Email</string>
+  <string name="prompt_password">Password</string>
+  <string name="prompt_name">Name</string>
+  <string name="navigate_to_login">Already have an account? Login here.</string>
+  <string name="invalid_name">Invalid name</string>
+  <string name="invalid_email">Invalid email</string>
+  <string name="invalid_password">Invalid password</string>
+  <string name="login">Login</string>
+  <string name="welcome">Welcome</string>
+  <string name="welcome_message">Welcome to the Story App!</string>
+  <string name="welcome_description">Let\'s share about Android, iOS, Machine Learning, Cloud Front-End, Back-End, and IT related topics!</string>
+  <string name="sign_in">Sign In</string>
+  <string name="sign_up">Sign Up</string>
+  <string name="enter_password">Enter your password</string>
+  <string name="enter_email">Enter your email</string>
+  <string name="enter_name">Enter your name</string>
+  <string name="navigate_to_register">Did not have account?, Register here</string>
+  <string name="please_wait">Please wait</string>
+  <string name="title_activity_home">HomeActivity</string>
+  <string name="title_home">Home</string>
+  <string name="title_dashboard">Dashboard</string>
+  <string name="title_notifications">Notifications</string>
+  <string name="unauthenticated">Unautheticated</string>
 </resources>
