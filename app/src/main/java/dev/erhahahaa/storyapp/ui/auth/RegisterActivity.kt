@@ -1,4 +1,4 @@
-package dev.erhahahaa.storyapp.ui.register
+package dev.erhahahaa.storyapp.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import dev.erhahahaa.storyapp.R
 import dev.erhahahaa.storyapp.databinding.ActivityRegisterBinding
-import dev.erhahahaa.storyapp.ui.login.LoginActivity
 import dev.erhahahaa.storyapp.utils.extensions.getViewModelFactory
 import dev.erhahahaa.storyapp.utils.extensions.hideKeyboard
 import dev.erhahahaa.storyapp.viewmodel.RegisterViewModel

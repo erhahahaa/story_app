@@ -3,8 +3,8 @@ package dev.erhahahaa.storyapp.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import dev.erhahahaa.storyapp.ui.home.HomeActivity
-import dev.erhahahaa.storyapp.ui.login.LoginActivity
+import dev.erhahahaa.storyapp.ui.auth.LoginActivity
+import dev.erhahahaa.storyapp.ui.story.HomeActivity
 import dev.erhahahaa.storyapp.utils.extensions.getViewModelFactory
 import dev.erhahahaa.storyapp.viewmodel.MainViewModel
 

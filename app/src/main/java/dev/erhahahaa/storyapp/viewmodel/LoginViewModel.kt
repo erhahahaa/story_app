@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dev.erhahahaa.storyapp.R
 import dev.erhahahaa.storyapp.data.model.LoginResponse
 import dev.erhahahaa.storyapp.data.repository.UserRepository
-import dev.erhahahaa.storyapp.ui.login.LoginFormState
+import dev.erhahahaa.storyapp.ui.auth.LoginFormState
 import dev.erhahahaa.storyapp.utils.extensions.isValidEmail
 import dev.erhahahaa.storyapp.utils.extensions.isValidPassword
 import kotlinx.coroutines.launch

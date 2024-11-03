@@ -1,4 +1,4 @@
-package dev.erhahahaa.storyapp.ui.home
+package dev.erhahahaa.storyapp.ui.story
 
 import android.content.Intent
 import android.os.Bundle

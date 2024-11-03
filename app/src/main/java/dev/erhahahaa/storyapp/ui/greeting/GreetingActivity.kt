@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dev.erhahahaa.storyapp.databinding.ActivityGreetingBinding
-import dev.erhahahaa.storyapp.ui.login.LoginActivity
-import dev.erhahahaa.storyapp.ui.register.RegisterActivity
+import dev.erhahahaa.storyapp.ui.auth.LoginActivity
+import dev.erhahahaa.storyapp.ui.auth.RegisterActivity
 
 class GreetingActivity : AppCompatActivity() {
 

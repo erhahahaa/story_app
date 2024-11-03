@@ -1,4 +1,4 @@
-package dev.erhahahaa.storyapp.ui.login
+package dev.erhahahaa.storyapp.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,8 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import dev.erhahahaa.storyapp.R
 import dev.erhahahaa.storyapp.databinding.ActivityLoginBinding
-import dev.erhahahaa.storyapp.ui.home.HomeActivity
-import dev.erhahahaa.storyapp.ui.register.RegisterActivity
+import dev.erhahahaa.storyapp.ui.story.HomeActivity
 import dev.erhahahaa.storyapp.utils.extensions.getViewModelFactory
 import dev.erhahahaa.storyapp.utils.extensions.hideKeyboard
 import dev.erhahahaa.storyapp.viewmodel.LoginViewModel

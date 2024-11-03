@@ -1,4 +1,4 @@
-package dev.erhahahaa.storyapp.ui.home
+package dev.erhahahaa.storyapp.ui.story.home
 
 import android.os.Bundle
 import android.util.Log

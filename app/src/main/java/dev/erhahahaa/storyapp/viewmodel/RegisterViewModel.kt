@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dev.erhahahaa.storyapp.R
 import dev.erhahahaa.storyapp.data.model.RegisterResponse
 import dev.erhahahaa.storyapp.data.repository.UserRepository
-import dev.erhahahaa.storyapp.ui.register.RegisterFormState
+import dev.erhahahaa.storyapp.ui.auth.RegisterFormState
 import dev.erhahahaa.storyapp.utils.extensions.isValidEmail
 import dev.erhahahaa.storyapp.utils.extensions.isValidName
 import dev.erhahahaa.storyapp.utils.extensions.isValidPassword
