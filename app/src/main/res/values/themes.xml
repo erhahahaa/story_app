@@ -14,4 +14,13 @@
 
   <style name="Theme.StoryApp" parent="Base.Theme.StoryApp" />
 
+  <style name="Theme.StoryApp.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
+
+  <style name="Theme.StoryApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+  <style name="Theme.StoryApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

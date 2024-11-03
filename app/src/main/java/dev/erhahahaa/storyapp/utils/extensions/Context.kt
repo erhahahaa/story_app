@@ -8,9 +8,9 @@ import dev.erhahahaa.storyapp.data.repository.UserRepository
 import dev.erhahahaa.storyapp.di.ViewModelFactory
 
 fun Context.getViewModelFactory(): ViewModelFactory {
-  val apiService = ApiConfig.getApiService()
   val userPref = UserPreferences.getInstance(this)
+  val apiService = ApiConfig.getApiService()
   val userRepo = UserRepository.getInstance(apiService, userPref)
-  val storyRepo = StoryRepository.getInstance(apiService, userPref)
+  val storyRepo = StoryRepository.getInstance(apiService)
   return ViewModelFactory(userRepo, storyRepo)
 }

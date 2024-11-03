@@ -3,50 +3,53 @@ package dev.erhahahaa.storyapp.data.repository
 import dev.erhahahaa.storyapp.data.api.ApiService
 import dev.erhahahaa.storyapp.data.model.EmptyResponse
 import dev.erhahahaa.storyapp.data.model.StoriesResponse
-import dev.erhahahaa.storyapp.data.prefs.UserPreferences
 import dev.erhahahaa.storyapp.utils.extensions.asRequestBody
-import dev.erhahahaa.storyapp.utils.extensions.parseError
+import dev.erhahahaa.storyapp.utils.extensions.parseErrorMessage
 import dev.erhahahaa.storyapp.utils.extensions.toRequestBody
 import java.io.File
-import kotlinx.coroutines.runBlocking
 import okhttp3.MultipartBody
 import retrofit2.HttpException
 
-class StoryRepository
-private constructor(
-  private val apiService: ApiService,
-  private val userPreferences: UserPreferences,
-) {
+class StoryRepository private constructor(private val apiService: ApiService) {
 
-  private var token: String? = runBlocking { userPreferences.getToken() }
-
-  suspend fun getStories(): StoriesResponse {
+  suspend fun getStories(token: String): StoriesResponse {
     return try {
-      apiService.getStories("Bearer $token")
+      apiService.getStories(bearer = "Bearer $token")
     } catch (e: HttpException) {
-      e.parseError<StoriesResponse>()
+      StoriesResponse(true, e.parseErrorMessage(), null)
     }
   }
 
-  suspend fun addStory(file: File, description: String, lat: Double, lon: Double): EmptyResponse {
-    if (token == null) return EmptyResponse.unauthenticated
-
+  suspend fun addStory(
+    token: String,
+    file: File,
+    description: String,
+    lat: Double,
+    lon: Double,
+  ): EmptyResponse {
     return try {
-      val requestBody = description.toRequestBody("text/plain")
+      val descBody = description.toRequestBody("text/plain")
       val imagePart = file.asRequestBody("image/jpeg")
       val imageFile = MultipartBody.Part.createFormData("photo", file.name, imagePart)
       val latPart = lat.toString().toRequestBody()
       val lonPart = lon.toString().toRequestBody()
-      apiService.addStory("Bearer $token", requestBody, imageFile, latPart, lonPart)
+
+      apiService.addStory(
+        bearer = "Bearer $token",
+        description = descBody,
+        photo = imageFile,
+        lat = latPart,
+        lon = lonPart,
+      )
     } catch (e: HttpException) {
-      e.parseError<EmptyResponse>()
+      EmptyResponse(true, e.parseErrorMessage())
     }
   }
 
   companion object {
     @Volatile private var instance: StoryRepository? = null
 
-    fun getInstance(apiService: ApiService, userPreferences: UserPreferences): StoryRepository =
-      instance ?: synchronized(this) { instance ?: StoryRepository(apiService, userPreferences) }
+    fun getInstance(apiService: ApiService): StoryRepository =
+      instance ?: synchronized(this) { instance ?: StoryRepository(apiService) }
   }
 }

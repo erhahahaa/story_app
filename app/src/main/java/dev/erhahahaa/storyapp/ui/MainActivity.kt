@@ -17,11 +17,11 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    viewModel.getToken()
-    viewModel.token.observe(this) { token ->
+    viewModel.getUser()
+    viewModel.user.observe(this) { user ->
       val targetActivity =
         when {
-          token.isNullOrEmpty() -> LoginActivity::class.java
+          user == null -> LoginActivity::class.java
           else -> HomeActivity::class.java
         }
       startActivity(Intent(this, targetActivity))

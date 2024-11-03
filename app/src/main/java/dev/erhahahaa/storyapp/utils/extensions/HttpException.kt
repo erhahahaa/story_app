@@ -1,15 +1,18 @@
 package dev.erhahahaa.storyapp.utils.extensions
 
+import android.util.Log
 import dev.erhahahaa.storyapp.data.api.ApiConfig
-import dev.erhahahaa.storyapp.data.model.BaseResponse
-import dev.erhahahaa.storyapp.data.model.EmptyResponse
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import retrofit2.HttpException
 
-inline fun <reified T : BaseResponse> HttpException.parseError(): T {
+fun HttpException.parseErrorMessage(): String {
   return try {
     val errorBody = response()?.errorBody()?.string()
-    ApiConfig.json.decodeFromString<T>(errorBody!!)
+    val json = ApiConfig.json.decodeFromString<JsonObject>(errorBody!!)
+    json["message"]?.jsonPrimitive?.content ?: "An error occurred"
   } catch (e: Exception) {
-    EmptyResponse(true, e.message ?: "An error occurred") as T
+    Log.e("HttpException", "parseErrorMessage: $e")
+    message ?: "An error occurred"
   }
 }

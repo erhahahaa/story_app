@@ -59,6 +59,10 @@ dependencies {
   //  ViewModel related dependencies
   implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
 
+  //  UI
+  implementation("com.github.bumptech.glide:glide:4.16.0")
+  implementation(libs.androidx.swiperefreshlayout)
+
   //  API related dependencies
   implementation("com.squareup.retrofit2:retrofit:2.11.0")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")

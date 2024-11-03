@@ -41,7 +41,7 @@ interface ApiService {
   @Multipart
   @POST("stories")
   suspend fun addStory(
-    @Header("Authorization") token: String,
+    @Header("Authorization") bearer: String,
     @Part("description") description: RequestBody,
     @Part photo: MultipartBody.Part,
     @Part("lat") lat: RequestBody,
@@ -59,7 +59,7 @@ interface ApiService {
 
   @GET("stories")
   suspend fun getStories(
-    @Header("Authorization") token: String,
+    @Header("Authorization") bearer: String,
     @Query("page") page: Int? = null,
     @Query("size") size: Int? = null,
     @Query("location") withLocation: LocationParam? = null,
@@ -67,7 +67,7 @@ interface ApiService {
 
   @GET("stories/{id}")
   suspend fun getStoryById(
-    @Header("Authorization") token: String,
+    @Header("Authorization") bearer: String,
     @Path("id") id: String,
   ): StoryResponse
 }

@@ -4,18 +4,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class BaseResponse {
+abstract class BaseResponse {
   abstract val error: Boolean
   abstract val message: String
 }
 
 @Serializable
 data class EmptyResponse(override val error: Boolean, override val message: String) :
-  BaseResponse() {
-  companion object {
-    val unauthenticated: EmptyResponse = EmptyResponse(error = true, message = "Unauthenticated")
-  }
-}
+  BaseResponse()
 
 typealias RegisterResponse = EmptyResponse
 

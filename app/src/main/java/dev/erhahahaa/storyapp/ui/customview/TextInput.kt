@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
@@ -66,6 +67,15 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
     isObscured = inputEditText.inputType == 129
     if (isObscured) setupToggleVisibility()
+
+    val isPasswordType =
+      inputEditText.inputType ==
+        InputType.TYPE_TEXT_VARIATION_PASSWORD or
+          InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or
+          InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD or
+          129
+
+    if (isPasswordType) setupPasswordLengthValidation()
   }
 
   @SuppressLint("ClickableViewAccessibility")
@@ -83,6 +93,25 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
     inputEditText.setOnTouchListener(this)
+  }
+
+  private fun setupPasswordLengthValidation() {
+    inputEditText.addTextChangedListener(
+      object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+          error =
+            if ((s?.length ?: 0) < 8) {
+              context.getString(R.string.password_must_be_at_least_8_characters)
+            } else {
+              null
+            }
+        }
+
+        override fun afterTextChanged(s: Editable?) {}
+      }
+    )
   }
 
   private fun toggleVisibility() {

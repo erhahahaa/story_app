@@ -19,9 +19,11 @@
   <string name="enter_name">Enter your name</string>
   <string name="navigate_to_register">Did not have account?, Register here</string>
   <string name="please_wait">Please wait</string>
-  <string name="title_activity_home">HomeActivity</string>
-  <string name="title_home">Home</string>
-  <string name="title_dashboard">Dashboard</string>
-  <string name="title_notifications">Notifications</string>
-  <string name="unauthenticated">Unautheticated</string>
+  <string name="Unauthenticated">Unauthenticated</string>
+  <string name="menu_home">Home</string>
+  <string name="password_must_be_at_least_8_characters">Password must be at least 8 characters</string>
+  <string name="add_story">Add story</string>
+  <string name="logout">Logout</string>
+  <string name="nav_header_desc">Navigation Header</string>
+  <string name="story_image">Story Image</string>
 </resources>

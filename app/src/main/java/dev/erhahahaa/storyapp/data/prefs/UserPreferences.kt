@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dev.erhahahaa.storyapp.data.model.User
+import dev.erhahahaa.storyapp.utils.extensions.toUser
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
@@ -11,7 +13,7 @@ class UserPreferences private constructor(context: Context) {
 
   companion object {
     private const val PREF_NAME = "user_prefs"
-    private val TOKEN_KEY = stringPreferencesKey("token")
+    private val USER_KEY = stringPreferencesKey("user")
 
     @Volatile private var INSTANCE: UserPreferences? = null
 
@@ -25,15 +27,16 @@ class UserPreferences private constructor(context: Context) {
 
   private val dataStore = context.dataStore
 
-  suspend fun saveSession(token: String) {
-    dataStore.edit { preferences -> preferences[TOKEN_KEY] = token }
+  suspend fun saveUser(user: User) {
+    dataStore.edit { preferences -> preferences[USER_KEY] = user.toString() }
   }
 
-  suspend fun getToken(): String? {
-    return dataStore.data.map { preferences -> preferences[TOKEN_KEY] }.firstOrNull()
+  suspend fun getUser(): User? {
+    val res = dataStore.data.map { preferences -> preferences[USER_KEY] }.firstOrNull()
+    return res?.toUser()
   }
 
-  suspend fun clearSession() {
-    dataStore.edit { preferences -> preferences.remove(TOKEN_KEY) }
+  suspend fun clearUser() {
+    dataStore.edit { preferences -> preferences.remove(USER_KEY) }
   }
 }

@@ -3,8 +3,9 @@ package dev.erhahahaa.storyapp.data.repository
 import dev.erhahahaa.storyapp.data.api.ApiService
 import dev.erhahahaa.storyapp.data.model.LoginResponse
 import dev.erhahahaa.storyapp.data.model.RegisterResponse
+import dev.erhahahaa.storyapp.data.model.User
 import dev.erhahahaa.storyapp.data.prefs.UserPreferences
-import dev.erhahahaa.storyapp.utils.extensions.parseError
+import dev.erhahahaa.storyapp.utils.extensions.parseErrorMessage
 import retrofit2.HttpException
 
 class UserRepository
@@ -15,13 +16,16 @@ private constructor(
 
   suspend fun login(email: String, password: String): LoginResponse {
     return try {
-      val res = apiService.login(email, password)
-      if (!res.error) {
-        res.data?.let { userPreferences.saveSession(it.token) }
+      val result = apiService.login(email, password)
+      if (!result.error) {
+        result.data?.let {
+          if (it.token.isNotEmpty()) userPreferences.clearUser()
+          userPreferences.saveUser(User(it.userId, it.name, email, it.token))
+        }
       }
-      res
+      result
     } catch (e: HttpException) {
-      e.parseError<LoginResponse>()
+      LoginResponse(true, e.parseErrorMessage(), null)
     }
   }
 
@@ -29,16 +33,16 @@ private constructor(
     return try {
       apiService.register(name, email, password)
     } catch (e: HttpException) {
-      e.parseError<RegisterResponse>()
+      RegisterResponse(true, e.parseErrorMessage())
     }
   }
 
-  suspend fun getToken(): String? {
-    return userPreferences.getToken()
+  suspend fun getUser(): User? {
+    return userPreferences.getUser()
   }
 
-  suspend fun clearSession() {
-    userPreferences.clearSession()
+  suspend fun clearUser() {
+    userPreferences.clearUser()
   }
 
   companion object {
