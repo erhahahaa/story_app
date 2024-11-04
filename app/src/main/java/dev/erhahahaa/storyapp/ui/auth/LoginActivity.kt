@@ -17,8 +17,7 @@ class LoginActivity : AppCompatActivity() {
 
   private lateinit var binding: ActivityLoginBinding
   private val viewModel: LoginViewModel by lazy {
-    val factory = getViewModelFactory()
-    factory.create(LoginViewModel::class.java)
+    getViewModelFactory().create(LoginViewModel::class.java)
   }
   private val pleaseWait by lazy { getString(R.string.please_wait) }
 
@@ -27,24 +26,28 @@ class LoginActivity : AppCompatActivity() {
     binding = ActivityLoginBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    viewModel.loginFormState.observe(this) { loginState ->
-      loginState ?: return@observe
+    setupObservers()
+    setupTextWatchers()
+    setupClickListeners()
+  }
 
-      binding.btnLogin.isEnabled = loginState.isDataValid
-      binding.edLoginEmail.error = loginState.emailError?.let { getString(it) }
-      binding.edLoginPassword.error = loginState.passwordError?.let { getString(it) }
+  private fun setupObservers() {
+    viewModel.loginFormState.observe(this) { loginState ->
+      binding.btnLogin.isEnabled = loginState?.isDataValid == true
+      binding.edLoginEmail.error = loginState?.emailError?.let { getString(it) }
+      binding.edLoginPassword.error = loginState?.passwordError?.let { getString(it) }
     }
 
     viewModel.loginResult.observe(this) { data ->
-      data ?: return@observe
-      val msg = data.message
-      Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-      if (!data.error) {
-        goToHome()
+      data?.let {
+        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+        if (!it.error) goToHome()
+        binding.btnLogin.setLoading(false)
       }
-      binding.btnLogin.setLoading(false)
     }
+  }
 
+  private fun setupTextWatchers() {
     val textWatcher =
       object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -56,29 +59,28 @@ class LoginActivity : AppCompatActivity() {
         override fun afterTextChanged(s: Editable?) {}
       }
 
-    binding.apply {
-      edLoginEmail.addTextChangedListener(textWatcher)
-      edLoginPassword.addTextChangedListener(textWatcher)
-      btnLogin.setOnClickListener {
-        hideKeyboard()
-        binding.btnLogin.setLoading(true)
-        Toast.makeText(this@LoginActivity, pleaseWait, Toast.LENGTH_SHORT).show()
-        viewModel.login(edLoginEmail.text, edLoginPassword.text)
-      }
+    binding.edLoginEmail.addTextChangedListener(textWatcher)
+    binding.edLoginPassword.addTextChangedListener(textWatcher)
+  }
 
-      tvGoToRegister.setOnClickListener { goToRegister() }
+  private fun setupClickListeners() {
+    binding.btnLogin.setOnClickListener {
+      hideKeyboard()
+      binding.btnLogin.setLoading(true)
+      Toast.makeText(this, pleaseWait, Toast.LENGTH_SHORT).show()
+      viewModel.login(binding.edLoginEmail.text, binding.edLoginPassword.text)
     }
+
+    binding.tvGoToRegister.setOnClickListener { goToRegister() }
   }
 
   private fun goToHome() {
+    startActivity(Intent(this, HomeActivity::class.java))
     finish()
-    val intent = Intent(this, HomeActivity::class.java)
-    startActivity(intent)
   }
 
   private fun goToRegister() {
+    startActivity(Intent(this, RegisterActivity::class.java))
     finish()
-    val intent = Intent(this, RegisterActivity::class.java)
-    startActivity(intent)
   }
 }

@@ -9,5 +9,28 @@
     android:id="@+id/nav_home"
     android:name="dev.erhahahaa.storyapp.ui.story.HomeFragment"
     android:label="@string/menu_home"
-    tools:layout="@layout/fragment_home" />
+    tools:layout="@layout/fragment_home">
+    <action
+      android:id="@+id/action_nav_home_to_nav_detail_story"
+      app:destination="@id/nav_detail_story">
+      <argument
+        android:name="story_detail"
+        app:argType="dev.erhahahaa.storyapp.data.model.StoryModel" />
+    </action>
+    <action
+      android:id="@+id/action_nav_home_to_nav_add_story"
+      app:destination="@id/nav_add_story" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/nav_add_story"
+    android:name="dev.erhahahaa.storyapp.ui.story.AddStoryFragment"
+    android:label="@string/add_story"
+    tools:layout="@layout/fragment_add_story" />
+
+  <fragment
+    android:id="@+id/nav_detail_story"
+    android:name="dev.erhahahaa.storyapp.ui.story.DetailStoryFragment"
+    android:label="@string/detail_story"
+    tools:layout="@layout/fragment_detail_story" />
 </navigation>

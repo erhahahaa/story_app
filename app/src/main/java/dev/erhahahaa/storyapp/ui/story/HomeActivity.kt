@@ -3,16 +3,15 @@ package dev.erhahahaa.storyapp.ui.story
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import dev.erhahahaa.storyapp.R
 import dev.erhahahaa.storyapp.databinding.ActivityHomeBinding
 import dev.erhahahaa.storyapp.ui.greeting.GreetingActivity
@@ -21,40 +20,35 @@ import dev.erhahahaa.storyapp.viewmodel.MainViewModel
 
 class HomeActivity : AppCompatActivity() {
 
-  private lateinit var appBarConfiguration: AppBarConfiguration
   private lateinit var binding: ActivityHomeBinding
   private lateinit var drawerName: TextView
   private lateinit var drawerEmail: TextView
 
   private val mainViewModel: MainViewModel by lazy {
-    val factory = getViewModelFactory()
-    factory.create(MainViewModel::class.java)
+    getViewModelFactory().create(MainViewModel::class.java)
   }
+  private lateinit var appBarConfiguration: AppBarConfiguration
+  private lateinit var navController: NavController
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     binding = ActivityHomeBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    setSupportActionBar(binding.toolbar)
+    setupToolbar()
+    setupDrawer()
+    setupFab()
+    observeUser()
+  }
 
-    binding.fab.setOnClickListener { view ->
-      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-        .setAction("Action", null)
-        .setAnchorView(R.id.fab)
-        .show()
-    }
+  private fun setupToolbar() {
+    setSupportActionBar(binding.toolbar)
+  }
+
+  private fun setupDrawer() {
     val drawerLayout: DrawerLayout = binding.drawerLayout
     val navView: NavigationView = binding.navView
-    val navController = findNavController(R.id.nav_host_fragment_content_home)
-
-    drawerName = navView.getHeaderView(0).findViewById(R.id.tv_drawer_name)
-    drawerEmail = navView.getHeaderView(0).findViewById(R.id.tv_drawer_email)
-
-    mainViewModel.user.observe(this) { user ->
-      drawerName.text = user?.name
-      drawerEmail.text = user?.email
-    }
+    navController = findNavController(R.id.nav_host_fragment_content_home)
 
     appBarConfiguration = AppBarConfiguration(setOf(R.id.nav_home), drawerLayout)
     setupActionBarWithNavController(navController, appBarConfiguration)
@@ -62,8 +56,9 @@ class HomeActivity : AppCompatActivity() {
 
     navView.setNavigationItemSelectedListener { item ->
       when (item.itemId) {
-        R.id.nav_logout -> {
-          showLogoutDialog()
+        R.id.action_logout -> {
+          mainViewModel.logout()
+          navigateToGreeting()
           true
         }
         else -> false
@@ -71,21 +66,34 @@ class HomeActivity : AppCompatActivity() {
     }
   }
 
-  private fun showLogoutDialog() {
-    AlertDialog.Builder(this)
-      .setTitle("Logout")
-      .setMessage("Are you sure you want to logout?")
-      .setPositiveButton("Yes") { _, _ ->
-        mainViewModel.logout()
-        navigateToGreeting()
+  private fun setupFab() {
+    binding.fab.setOnClickListener {
+      val action = HomeFragmentDirections.actionNavHomeToNavAddStory()
+      navController.navigate(action)
+    }
+
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+      if (destination.id == R.id.nav_add_story || destination.id == R.id.nav_detail_story) {
+        binding.fab.hide()
+      } else {
+        binding.fab.show()
       }
-      .setNegativeButton("No", null)
-      .show()
+    }
+  }
+
+  private fun observeUser() {
+    mainViewModel.user.observe(this) { user ->
+      val headerView = binding.navView.getHeaderView(0)
+      drawerName = headerView.findViewById(R.id.tv_drawer_name)
+      drawerEmail = headerView.findViewById(R.id.tv_drawer_email)
+
+      drawerName.text = user?.name ?: "Guest"
+      drawerEmail.text = user?.email ?: "No Email"
+    }
   }
 
   private fun navigateToGreeting() {
-    val intent = Intent(this, GreetingActivity::class.java)
-    startActivity(intent)
+    startActivity(Intent(this, GreetingActivity::class.java))
     finish()
   }
 

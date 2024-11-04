@@ -18,6 +18,7 @@
       android:layout_marginBottom="16dp"
       android:contentDescription="@string/sign_up"
       android:src="@drawable/sign_up"
+      android:transitionName="shared_image"
       app:layout_constraintBottom_toTopOf="@id/tv_register_title"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent" />
@@ -29,6 +30,7 @@
       android:text="@string/register"
       android:textSize="24sp"
       android:textStyle="bold"
+      android:transitionName="shared_title"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="@+id/iv_register_logo" />
 

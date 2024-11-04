@@ -12,9 +12,9 @@ import retrofit2.HttpException
 
 class StoryRepository private constructor(private val apiService: ApiService) {
 
-  suspend fun getStories(token: String): StoriesResponse {
+  suspend fun getStories(token: String, page: Int? = null, size: Int? = null): StoriesResponse {
     return try {
-      apiService.getStories(bearer = "Bearer $token")
+      apiService.getStories(bearer = "Bearer $token", page = page, size = size)
     } catch (e: HttpException) {
       StoriesResponse(true, e.parseErrorMessage(), null)
     }
@@ -24,18 +24,42 @@ class StoryRepository private constructor(private val apiService: ApiService) {
     token: String,
     file: File,
     description: String,
-    lat: Double,
-    lon: Double,
+    lat: Double?,
+    lon: Double?,
   ): EmptyResponse {
     return try {
       val descBody = description.toRequestBody("text/plain")
       val imagePart = file.asRequestBody("image/jpeg")
       val imageFile = MultipartBody.Part.createFormData("photo", file.name, imagePart)
-      val latPart = lat.toString().toRequestBody()
-      val lonPart = lon.toString().toRequestBody()
+      val latPart = lat?.toString()?.toRequestBody()
+      val lonPart = lon?.toString()?.toRequestBody()
 
       apiService.addStory(
         bearer = "Bearer $token",
+        description = descBody,
+        photo = imageFile,
+        lat = latPart,
+        lon = lonPart,
+      )
+    } catch (e: HttpException) {
+      EmptyResponse(true, e.parseErrorMessage())
+    }
+  }
+
+  suspend fun addStoryGuest(
+    file: File,
+    description: String,
+    lat: Double?,
+    lon: Double?,
+  ): EmptyResponse {
+    return try {
+      val descBody = description.toRequestBody("text/plain")
+      val imagePart = file.asRequestBody("image/jpeg")
+      val imageFile = MultipartBody.Part.createFormData("photo", file.name, imagePart)
+      val latPart = lat?.toString()?.toRequestBody()
+      val lonPart = lon?.toString()?.toRequestBody()
+
+      apiService.addStoryGuest(
         description = descBody,
         photo = imageFile,
         lat = latPart,

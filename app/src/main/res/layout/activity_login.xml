@@ -18,6 +18,7 @@
       android:layout_marginBottom="16dp"
       android:contentDescription="@string/sign_in"
       android:src="@drawable/sign_in"
+      android:transitionName="shared_image"
       app:layout_constraintBottom_toTopOf="@id/tv_login_title"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent" />
@@ -29,6 +30,7 @@
       android:text="@string/login"
       android:textSize="24sp"
       android:textStyle="bold"
+      android:transitionName="shared_title"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="@+id/iv_login_logo" />
 

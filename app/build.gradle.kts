@@ -2,6 +2,8 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   kotlin("plugin.serialization") version "2.0.20"
+  id("androidx.navigation.safeargs.kotlin")
+  id("kotlin-parcelize")
 }
 
 android {
@@ -68,6 +70,7 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
   implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.11.0")
   implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+  implementation(libs.play.services.location)
 
   //  Storage dependencies
   implementation("androidx.datastore:datastore-preferences:1.1.1")

@@ -14,25 +14,27 @@
     android:padding="8dp">
 
     <ImageView
-      android:id="@+id/iv_story_image"
+      android:id="@+id/iv_item_photo"
       android:layout_width="match_parent"
       android:layout_height="200dp"
       android:contentDescription="@string/story_image" />
 
     <TextView
-      android:id="@+id/tv_story_name"
+      android:id="@+id/tv_item_name"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp" />
+      android:layout_marginTop="8dp"
+      android:textSize="18sp"
+      android:textStyle="bold" />
 
     <TextView
-      android:id="@+id/tv_story_description"
+      android:id="@+id/tv_description"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp" />
 
     <TextView
-      android:id="@+id/tv_story_created_date"
+      android:id="@+id/tv_created_date"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp" />

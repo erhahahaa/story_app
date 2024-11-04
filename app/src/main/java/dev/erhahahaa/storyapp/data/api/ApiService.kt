@@ -44,17 +44,17 @@ interface ApiService {
     @Header("Authorization") bearer: String,
     @Part("description") description: RequestBody,
     @Part photo: MultipartBody.Part,
-    @Part("lat") lat: RequestBody,
-    @Part("lon") lon: RequestBody,
+    @Part("lat") lat: RequestBody?,
+    @Part("lon") lon: RequestBody?,
   ): EmptyResponse
 
   @Multipart
   @POST("stories/guest")
   suspend fun addStoryGuest(
-    @Field("description") description: String,
+    @Part("description") description: RequestBody,
     @Part photo: MultipartBody.Part,
-    @Field("lat") lat: Double,
-    @Field("lon") lon: Double,
+    @Part("lat") lat: RequestBody?,
+    @Part("lon") lon: RequestBody?,
   ): EmptyResponse
 
   @GET("stories")

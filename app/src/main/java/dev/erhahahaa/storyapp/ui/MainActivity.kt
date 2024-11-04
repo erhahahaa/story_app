@@ -3,7 +3,7 @@ package dev.erhahahaa.storyapp.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import dev.erhahahaa.storyapp.ui.auth.LoginActivity
+import dev.erhahahaa.storyapp.ui.greeting.GreetingActivity
 import dev.erhahahaa.storyapp.ui.story.HomeActivity
 import dev.erhahahaa.storyapp.utils.extensions.getViewModelFactory
 import dev.erhahahaa.storyapp.viewmodel.MainViewModel
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     viewModel.user.observe(this) { user ->
       val targetActivity =
         when {
-          user == null -> LoginActivity::class.java
+          user == null -> GreetingActivity::class.java
           else -> HomeActivity::class.java
         }
       startActivity(Intent(this, targetActivity))
