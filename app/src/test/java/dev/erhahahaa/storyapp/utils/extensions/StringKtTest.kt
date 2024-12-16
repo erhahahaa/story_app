@@ -1,6 +1,7 @@
 package dev.erhahahaa.storyapp.utils.extensions
 
 import java.io.File
+import okhttp3.MediaType.Companion.toMediaType
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 

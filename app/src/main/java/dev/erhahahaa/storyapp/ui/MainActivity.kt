@@ -24,7 +24,11 @@ class MainActivity : AppCompatActivity() {
           user == null -> GreetingActivity::class.java
           else -> HomeActivity::class.java
         }
-      startActivity(Intent(this, targetActivity))
+      startActivity(
+        Intent(this, targetActivity).apply {
+          flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+      )
       finish()
     }
   }
