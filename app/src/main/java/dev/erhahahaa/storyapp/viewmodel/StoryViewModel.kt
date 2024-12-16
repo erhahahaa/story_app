@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.erhahahaa.storyapp.R
+import dev.erhahahaa.storyapp.data.api.LocationParam
 import dev.erhahahaa.storyapp.data.model.EmptyResponse
 import dev.erhahahaa.storyapp.data.model.StoriesResponse
 import dev.erhahahaa.storyapp.data.repository.StoryRepository
@@ -31,16 +32,24 @@ class StoryViewModel(private val storyRepository: StoryRepository) : ViewModel()
   private val _hasMoreData = MutableLiveData<Boolean>()
   val hasMoreData: LiveData<Boolean> = _hasMoreData
 
-  fun getStories(token: String) {
-    if (page == null) page = 0
-    viewModelScope.launch {
-      val result = storyRepository.getStories(token, page, 10)
-      if ((result.data?.size ?: 0) < 10) {
-        _hasMoreData.postValue(false)
-      } else {
-        _hasMoreData.postValue(true)
+  fun getStories(token: String, withLocation: LocationParam? = null) {
+    if (withLocation != null) {
+      viewModelScope.launch {
+        val result = storyRepository.getStories(token, null, null, withLocation)
+        _stories.postValue(result)
       }
-      _stories.postValue(result)
+      return
+    } else {
+      if (page == null) page = 0
+      viewModelScope.launch {
+        val result = storyRepository.getStories(token, page, 10)
+        if ((result.data?.size ?: 0) < 10) {
+          _hasMoreData.postValue(false)
+        } else {
+          _hasMoreData.postValue(true)
+        }
+        _stories.postValue(result)
+      }
     }
   }
 

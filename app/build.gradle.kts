@@ -75,6 +75,10 @@ dependencies {
   //  Storage dependencies
   implementation("androidx.datastore:datastore-preferences:1.1.1")
 
+  // Maps dependencies
+  implementation("com.google.android.gms:play-services-maps:19.0.0")
+  implementation("com.google.android.gms:play-services-location:21.3.0")
+
   // Testing dependencies
   testImplementation("org.mockito:mockito-core:5.14.2")
   testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")

@@ -5,6 +5,12 @@
 
   <group android:checkableBehavior="single">
     <item
+      android:id="@+id/action_map"
+      android:icon="@drawable/ic_location_pin"
+      android:title="@string/maps" />
+  </group>
+  <group android:checkableBehavior="single">
+    <item
       android:id="@+id/action_logout"
       android:icon="@drawable/ic_logout"
       android:title="@string/logout" />

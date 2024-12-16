@@ -52,4 +52,5 @@
   <string name="guest_mode">Guest Mode</string>
   <string name="no_more_stories">No more stories</string>
   <string name="error_occurred">An error occured</string>
+  <string name="maps">Maps</string>
 </resources>

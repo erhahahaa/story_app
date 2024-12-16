@@ -1,6 +1,7 @@
 package dev.erhahahaa.storyapp.data.repository
 
 import dev.erhahahaa.storyapp.data.api.ApiService
+import dev.erhahahaa.storyapp.data.api.LocationParam
 import dev.erhahahaa.storyapp.data.model.EmptyResponse
 import dev.erhahahaa.storyapp.data.model.StoriesResponse
 import dev.erhahahaa.storyapp.utils.extensions.asRequestBody
@@ -12,9 +13,19 @@ import retrofit2.HttpException
 
 class StoryRepository private constructor(private val apiService: ApiService) {
 
-  suspend fun getStories(token: String, page: Int? = null, size: Int? = null): StoriesResponse {
+  suspend fun getStories(
+    token: String,
+    page: Int? = null,
+    size: Int? = null,
+    withLocation: LocationParam? = null,
+  ): StoriesResponse {
     return try {
-      apiService.getStories(bearer = "Bearer $token", page = page, size = size)
+      apiService.getStories(
+        bearer = "Bearer $token",
+        page = page,
+        size = size,
+        withLocation = withLocation?.value,
+      )
     } catch (e: HttpException) {
       StoriesResponse(true, e.parseErrorMessage(), null)
     }

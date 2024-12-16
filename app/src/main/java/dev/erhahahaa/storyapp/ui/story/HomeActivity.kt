@@ -61,6 +61,12 @@ class HomeActivity : AppCompatActivity() {
           navigateToGreeting()
           true
         }
+        R.id.action_map -> {
+          val action = HomeFragmentDirections.actionNavHomeToNavMap()
+          navController.navigate(action)
+          drawerLayout.close()
+          true
+        }
         else -> false
       }
     }

@@ -8,13 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import dev.erhahahaa.storyapp.R
 import dev.erhahahaa.storyapp.data.model.StoryModel
 import dev.erhahahaa.storyapp.databinding.FragmentDetailStoryBinding
-import dev.erhahahaa.storyapp.utils.extensions.createLoader
+import dev.erhahahaa.storyapp.utils.extensions.loadImage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -49,16 +46,13 @@ class DetailStoryFragment : Fragment() {
   }
 
   private fun displayStoryDetails(story: StoryModel) {
-    val circularDrawable = binding.root.context.createLoader()
-    Glide.with(binding.root.context)
-      .load(story.photoUrl)
-      .transform(CenterCrop(), RoundedCorners(12))
-      .placeholder(circularDrawable)
-      .into(binding.ivDetailPhoto)
+    binding.root.context.loadImage(story.photoUrl, binding.ivDetailPhoto)
 
-    binding.tvDetailName.text = story.name
-    binding.tvDetailDescription.text = story.description
-    binding.tvCreatedDate.text = getString(R.string.postedOn, formatDate(story.createdAt))
+    binding.apply {
+      tvDetailName.text = story.name
+      tvDetailDescription.text = story.description
+      tvCreatedDate.text = getString(R.string.postedOn, formatDate(story.createdAt))
+    }
     if (story.lat != null && story.lon != null) getLocation(story.lat, story.lon)
   }
 

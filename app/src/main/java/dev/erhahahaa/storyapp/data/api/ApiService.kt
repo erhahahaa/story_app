@@ -62,7 +62,7 @@ interface ApiService {
     @Header("Authorization") bearer: String,
     @Query("page") page: Int? = null,
     @Query("size") size: Int? = null,
-    @Query("location") withLocation: LocationParam? = null,
+    @Query("location") withLocation: Int? = null,
   ): StoriesResponse
 
   @GET("stories/{id}")
