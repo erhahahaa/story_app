@@ -10,6 +10,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.CustomTarget
 import dev.erhahahaa.storyapp.data.api.ApiConfig
+import dev.erhahahaa.storyapp.data.db.StoryDatabase
 import dev.erhahahaa.storyapp.data.prefs.UserPreferences
 import dev.erhahahaa.storyapp.data.repository.StoryRepository
 import dev.erhahahaa.storyapp.data.repository.UserRepository
@@ -19,8 +20,9 @@ import java.util.Locale
 fun Context.getViewModelFactory(): ViewModelFactory {
   val userPref = UserPreferences.getInstance(this)
   val apiService = ApiConfig.getApiService()
+  val database = StoryDatabase.getInstance(this)
   val userRepo = UserRepository.getInstance(apiService, userPref)
-  val storyRepo = StoryRepository.getInstance(apiService)
+  val storyRepo = StoryRepository.getInstance(apiService, database)
   return ViewModelFactory(userRepo, storyRepo)
 }
 

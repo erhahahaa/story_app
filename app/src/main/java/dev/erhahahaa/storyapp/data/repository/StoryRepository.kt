@@ -1,9 +1,18 @@
 package dev.erhahahaa.storyapp.data.repository
 
+import androidx.lifecycle.LiveData
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import dev.erhahahaa.storyapp.data.api.ApiService
 import dev.erhahahaa.storyapp.data.api.LocationParam
+import dev.erhahahaa.storyapp.data.db.StoryDatabase
 import dev.erhahahaa.storyapp.data.model.EmptyResponse
 import dev.erhahahaa.storyapp.data.model.StoriesResponse
+import dev.erhahahaa.storyapp.data.model.StoryModel
+import dev.erhahahaa.storyapp.data.paging.StoryRemoteMediator
 import dev.erhahahaa.storyapp.utils.extensions.asRequestBody
 import dev.erhahahaa.storyapp.utils.extensions.parseErrorMessage
 import dev.erhahahaa.storyapp.utils.extensions.toRequestBody
@@ -11,7 +20,8 @@ import java.io.File
 import okhttp3.MultipartBody
 import retrofit2.HttpException
 
-class StoryRepository private constructor(private val apiService: ApiService) {
+class StoryRepository
+private constructor(private val apiService: ApiService, private val database: StoryDatabase) {
 
   suspend fun getStories(
     token: String,
@@ -29,6 +39,18 @@ class StoryRepository private constructor(private val apiService: ApiService) {
     } catch (e: HttpException) {
       StoriesResponse(true, e.parseErrorMessage(), null)
     }
+  }
+
+  @OptIn(ExperimentalPagingApi::class)
+  fun getStories(token: String): LiveData<PagingData<StoryModel>> {
+    val pagingSourceFactory = { database.storyDao().getAllStories() }
+
+    return Pager(
+        config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+        remoteMediator = StoryRemoteMediator(apiService, token, database),
+        pagingSourceFactory = pagingSourceFactory,
+      )
+      .liveData
   }
 
   suspend fun addStory(
@@ -84,7 +106,7 @@ class StoryRepository private constructor(private val apiService: ApiService) {
   companion object {
     @Volatile private var instance: StoryRepository? = null
 
-    fun getInstance(apiService: ApiService): StoryRepository =
-      instance ?: synchronized(this) { instance ?: StoryRepository(apiService) }
+    fun getInstance(apiService: ApiService, database: StoryDatabase): StoryRepository =
+      instance ?: synchronized(this) { instance ?: StoryRepository(apiService, database) }
   }
 }

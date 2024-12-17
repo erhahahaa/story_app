@@ -20,14 +20,14 @@ class MainActivity : AppCompatActivity() {
     viewModel.getUser()
     viewModel.user.observe(this) { user ->
       val targetActivity =
-              when {
-                user == null -> GreetingActivity::class.java
-                else -> HomeActivity::class.java
-              }
+        when {
+          user == null -> GreetingActivity::class.java
+          else -> HomeActivity::class.java
+        }
       startActivity(
-              Intent(this, targetActivity).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-              }
+        Intent(this, targetActivity).apply {
+          flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
       )
       finish()
     }

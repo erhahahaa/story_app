@@ -4,6 +4,7 @@ plugins {
   kotlin("plugin.serialization") version "2.0.20"
   id("androidx.navigation.safeargs.kotlin")
   id("kotlin-parcelize")
+  id("com.google.devtools.ksp")
 }
 
 android {
@@ -74,10 +75,17 @@ dependencies {
 
   //  Storage dependencies
   implementation("androidx.datastore:datastore-preferences:1.1.1")
+  implementation("androidx.room:room-runtime:2.6.1")
+  implementation("androidx.room:room-ktx:2.6.1")
+  ksp("androidx.room:room-compiler:2.6.1")
 
   // Maps dependencies
   implementation("com.google.android.gms:play-services-maps:19.0.0")
   implementation("com.google.android.gms:play-services-location:21.3.0")
+
+  //  Paging dependencies
+  implementation("androidx.paging:paging-runtime:3.3.5")
+  implementation("androidx.room:room-paging:2.6.1")
 
   // Testing dependencies
   testImplementation("org.mockito:mockito-core:5.14.2")

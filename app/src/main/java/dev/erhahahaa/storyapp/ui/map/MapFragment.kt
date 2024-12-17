@@ -16,7 +16,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dev.erhahahaa.storyapp.R
-import dev.erhahahaa.storyapp.data.api.LocationParam
 import dev.erhahahaa.storyapp.data.model.StoryModel
 import dev.erhahahaa.storyapp.data.model.User
 import dev.erhahahaa.storyapp.databinding.FragmentMapBinding
@@ -59,11 +58,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
   private fun setupObservers() {
     mainViewModel.user.observe(viewLifecycleOwner) { user ->
       this.user = user
-      getStories()
+      getStoriesWithLocation()
     }
-    storyViewModel.stories.observe(viewLifecycleOwner) { stories ->
+    storyViewModel.storiesWithLocation.observe(viewLifecycleOwner) { storiesWithLocation ->
       if (::googleMap.isInitialized) {
-        stories?.data?.forEach { story ->
+        storiesWithLocation?.data?.forEach { story ->
           story.lat?.let { lat ->
             story.lon?.let { lon ->
               val position = LatLng(lat, lon)
@@ -78,8 +77,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
   }
 
-  private fun getStories() {
-    user?.token?.let { storyViewModel.getStories(it, withLocation = LocationParam.WITH_LOCATION) }
+  private fun getStoriesWithLocation() {
+    user?.token?.let { storyViewModel.getStoriesWithLocation(it) }
   }
 
   override fun onMapReady(map: GoogleMap) {
