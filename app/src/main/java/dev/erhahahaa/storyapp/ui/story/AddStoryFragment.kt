@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +37,7 @@ class AddStoryFragment : Fragment() {
     get() = _binding!!
 
   private lateinit var fusedLocationClient: FusedLocationProviderClient
-  private lateinit var locationRequest: LocationRequest
-  private lateinit var locationCallback: LocationCallback
+  private var locationCallback: LocationCallback? = null
   private var location: Location? = null
 
   private val mainViewModel: MainViewModel by activityViewModels {
@@ -55,8 +53,10 @@ class AddStoryFragment : Fragment() {
 
   private val permissionsLauncher =
     registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-      permissions[Manifest.permission.CAMERA]?.let { if (it) launchCamera() }
-      permissions[Manifest.permission.ACCESS_FINE_LOCATION]?.let { if (it) getLocation() }
+      when {
+        permissions[Manifest.permission.CAMERA] == true -> launchCamera()
+        permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true -> initializeLocation()
+      }
     }
 
   private val getImageFromGallery =
@@ -66,24 +66,12 @@ class AddStoryFragment : Fragment() {
 
   private val getImageFromCamera =
     registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
-      if (isSuccess && imageUri != null) handleImageSelection(imageUri!!)
-      else showError(getString(R.string.error_capturing_image))
+      if (isSuccess && imageUri != null) {
+        handleImageSelection(imageUri!!)
+      } else {
+        showError(getString(R.string.error_capturing_image))
+      }
     }
-
-  private fun handleImageSelection(uri: Uri) {
-    try {
-      val file =
-        createImageFile().apply {
-          copyUriToFile(uri, this)
-          imageFile = if (length() > 1_000_000) compressImage() else this
-        }
-      imageUri = getUriForFile(file)
-      binding.ivImage.setImageURI(imageUri)
-      updateFormState()
-    } catch (e: IOException) {
-      showError(getString(R.string.error_processing_image))
-    }
-  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -96,60 +84,59 @@ class AddStoryFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    setupLocation()
+    fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
     setupObservers()
     setupListeners()
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    _binding = null
-    fusedLocationClient.removeLocationUpdates(locationCallback)
+    locationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
     imageFile?.delete()
+    _binding = null
   }
 
-  private fun setupLocation() {
-    fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-    locationRequest =
-      LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10_000L)
-        .setWaitForAccurateLocation(false)
-        .setMinUpdateIntervalMillis(5_000L)
-        .setMaxUpdateDelayMillis(30_000L)
-        .build()
-
-    locationCallback =
-      object : LocationCallback() {
-        override fun onLocationResult(result: LocationResult) {
-          super.onLocationResult(result)
-          location = result.lastLocation
-          updateFormState()
-        }
+  private fun handleImageSelection(uri: Uri) {
+    try {
+      createImageFile().apply {
+        copyUriToFile(uri, this)
+        imageFile = if (length() > 1_000_000) compressImage() else this
+        imageUri = getUriForFile(this)
+        binding.ivImage.setImageURI(imageUri)
+        updateFormState()
       }
-    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
-    checkLocationPermission()
+    } catch (e: IOException) {
+      showError(getString(R.string.error_processing_image))
+    }
   }
 
   private fun setupObservers() {
     var isLoading = false
-    mainViewModel.user.observe(viewLifecycleOwner) { user -> this.user = user }
 
-    storyViewModel.storyFormState.observe(viewLifecycleOwner) { state ->
-      binding.buttonAdd.isEnabled = state?.isDataValid == true
-      binding.edAddDescription.error = state?.descriptionError?.let { getString(it) }
-    }
+    with(viewLifecycleOwner) {
+      mainViewModel.user.observe(this) { user = it }
 
-    storyViewModel.isLoading.observe(viewLifecycleOwner) { value ->
-      binding.buttonAdd.isEnabled = !value
-      binding.buttonAdd.setLoading(value)
-      isLoading = value
-    }
+      storyViewModel.storyFormState.observe(this) { state ->
+        binding.apply {
+          buttonAdd.isEnabled = state?.isDataValid == true
+          edAddDescription.error = state?.descriptionError?.let { getString(it) }
+        }
+      }
 
-    storyViewModel.addStoryResult.observe(viewLifecycleOwner) { result ->
-      if (result != null) {
-        showMessage(result.message)
-        if (!result.error && !isLoading) {
-          val onBackPressedDispatcher = requireActivity().onBackPressedDispatcher
-          onBackPressedDispatcher.onBackPressed()
+      storyViewModel.isLoading.observe(this) { value ->
+        binding.buttonAdd.apply {
+          isEnabled = !value
+          setLoading(value)
+        }
+        isLoading = value
+      }
+
+      storyViewModel.addStoryResult.observe(this) { result ->
+        result?.let {
+          showMessage(it.message)
+          if (!it.error && !isLoading) {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+          }
         }
       }
     }
@@ -168,86 +155,81 @@ class AddStoryFragment : Fragment() {
         }
       )
 
-      btnCamera.setOnClickListener { checkCameraPermission() }
+      btnCamera.setOnClickListener {
+        when {
+          hasPermission(Manifest.permission.CAMERA) -> launchCamera()
+          shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) ->
+            showMessage(getString(R.string.camera_permission_required))
+          else -> permissionsLauncher.launch(arrayOf(Manifest.permission.CAMERA))
+        }
+      }
       btnGallery.setOnClickListener { launchGallery() }
       buttonAdd.setOnClickListener { submitStory() }
+      switchLocation.setOnCheckedChangeListener { _, isChecked ->
+        if (isChecked) {
+          checkLocationPermissions()
+        } else {
+          locationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
+          location = null
+          updateFormState()
+        }
+      }
     }
   }
 
-  private fun updateFormState() {
-    storyViewModel.storyDataChanged(binding.edAddDescription.text.toString(), imageFile, location)
+  private fun initializeLocation() {
+    if (!hasLocationPermissions()) return
+
+    try {
+      locationCallback =
+        object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
+              location = result.lastLocation
+              updateFormState()
+            }
+          }
+          .also { callback ->
+            val locationRequest =
+              LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10_000L)
+                .setWaitForAccurateLocation(false)
+                .setMinUpdateIntervalMillis(5_000L)
+                .setMaxUpdateDelayMillis(30_000L)
+                .build()
+
+            fusedLocationClient.requestLocationUpdates(
+              locationRequest,
+              callback,
+              Looper.getMainLooper(),
+            )
+
+            fusedLocationClient.lastLocation.addOnSuccessListener { loc ->
+              location = loc
+              updateFormState()
+            }
+          }
+    } catch (e: SecurityException) {
+      showError(getString(R.string.error_getting_location))
+    }
   }
 
-  private fun checkCameraPermission() {
-    if (hasPermission(Manifest.permission.CAMERA)) {
-      launchCamera()
+  private fun checkLocationPermissions() {
+    val permissions =
+      arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+
+    if (permissions.all { hasPermission(it) }) {
+      initializeLocation()
     } else {
-      handlePermissionRequest(Manifest.permission.CAMERA, R.string.camera_permission_required)
+      permissionsLauncher.launch(permissions)
     }
   }
 
-  private fun checkLocationPermission() {
-    if (
-      hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
-        hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-    ) {
-      getLocation()
-    } else {
-      handlePermissionRequest(
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        R.string.location_permission_required,
-      )
-      handlePermissionRequest(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        R.string.location_permission_required,
-      )
-    }
-  }
-
-  private fun handlePermissionRequest(permission: String, messageId: Int) {
-    if (shouldShowRequestPermissionRationale(permission)) {
-      showMessage(getString(messageId))
-    } else {
-      permissionsLauncher.launch(arrayOf(permission))
-    }
-  }
+  private fun hasLocationPermissions() =
+    hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+      hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
 
   private fun hasPermission(permission: String): Boolean =
     ActivityCompat.checkSelfPermission(requireContext(), permission) ==
       PackageManager.PERMISSION_GRANTED
-
-  private fun launchCamera() {
-    try {
-      imageFile = createImageFile()
-      imageUri = getUriForFile(imageFile!!)
-      getImageFromCamera.launch(imageUri)
-    } catch (e: IOException) {
-      showError(getString(R.string.error_creating_image_file))
-    }
-  }
-
-  private fun launchGallery() {
-    getImageFromGallery.launch(
-      PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-    )
-  }
-
-  private fun getLocation() {
-    if (
-      hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
-        hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-    ) {
-      try {
-        fusedLocationClient.lastLocation.addOnSuccessListener { loc ->
-          location = loc
-          updateFormState()
-          Log.d("AddStoryFragment", "Location: $loc")
-        }
-      } catch (e: SecurityException) {
-        showError(getString(R.string.error_getting_location))
-      }
-    }
-  }
 
   private fun submitStory() {
     val description = binding.edAddDescription.text.toString()
@@ -261,13 +243,35 @@ class AddStoryFragment : Fragment() {
     imageFile?.let {
       showMessage(getString(R.string.please_wait))
       activity?.hideKeyboard()
-      val isGuest = binding.switchGuest.isChecked
-      if (isGuest) {
+
+      if (binding.switchGuest.isChecked) {
         storyViewModel.addStoryGuest(it, description, location?.latitude, location?.longitude)
       } else {
         storyViewModel.addStory(token, it, description, location?.latitude, location?.longitude)
       }
     } ?: showError(getString(R.string.error_image_required))
+  }
+
+  private fun launchCamera() {
+    try {
+      createImageFile().also { file ->
+        imageFile = file
+        imageUri = getUriForFile(file)
+        getImageFromCamera.launch(imageUri)
+      }
+    } catch (e: IOException) {
+      showError(getString(R.string.error_creating_image_file))
+    }
+  }
+
+  private fun launchGallery() {
+    getImageFromGallery.launch(
+      PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+    )
+  }
+
+  private fun updateFormState() {
+    storyViewModel.storyDataChanged(binding.edAddDescription.text.toString(), imageFile, location)
   }
 
   @Throws(IOException::class)
@@ -284,9 +288,7 @@ class AddStoryFragment : Fragment() {
     }
   }
 
-  private fun showError(message: String) {
-    showMessage(message)
-  }
+  private fun showError(message: String) = showMessage(message)
 
   private fun showMessage(message: String) {
     if (isAdded) {
