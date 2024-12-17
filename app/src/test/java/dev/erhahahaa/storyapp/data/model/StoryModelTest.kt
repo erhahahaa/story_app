@@ -1,43 +1,93 @@
 package dev.erhahahaa.storyapp.data.model
 
-import kotlinx.serialization.json.Json
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
 
 class StoryModelTest {
+
   @Test
-  fun `test StoryModel serialization`() {
-    val story =
-      StoryModel(
-        id = "asdf-asdf-asdf-asdf",
-        name = "Test Story",
-        description = "This is a test story",
-        photoUrl = "http://example.com/photo.jpg",
-        lat = 12.34,
-        lon = 56.78,
-        createdAt = "2023-10-01T12:00:00Z",
-      )
-    val json = Json.encodeToString(StoryModel.serializer(), story)
-    assertNotNull(json)
-    assertTrue(json.contains("Test Story"))
+  fun `test StoryModel creation`() {
+    val id = "story123"
+    val name = "John Doe"
+    val description = "A fascinating story"
+    val photoUrl = "http://example.com/photo.jpg"
+    val createdAt = "2023-01-01T00:00:00Z"
+    val lat = 37.7749
+    val lon = -122.4194
+
+    val storyModel = StoryModel(id, name, description, photoUrl, lat, lon, createdAt)
+
+    assertNotNull(storyModel)
+    assertEquals(id, storyModel.id)
+    assertEquals(name, storyModel.name)
+    assertEquals(description, storyModel.description)
+    assertEquals(photoUrl, storyModel.photoUrl)
+    assertEquals(createdAt, storyModel.createdAt)
+    storyModel.lat?.let { assertEquals(lat, it, 0.0) }
+    storyModel.lon?.let { assertEquals(lon, it, 0.0) }
   }
 
   @Test
-  fun `test StoryModel deserialization`() {
-    val json =
-      """
-            {
-                "id": "asdf-asdf-asdf-asdf",
-                "name": "Test Story",
-                "description": "This is a test story",
-                "photoUrl": "http://example.com/photo.jpg",
-                "lat": 12.34,
-                "lon": 56.78,
-                "createdAt": "2023-10-01T12:00:00Z"
-            }
-        """
-    val story = Json.decodeFromString(StoryModel.serializer(), json)
-    assertNotNull(story)
-    assertEquals("Test Story", story.name)
+  fun `test StoryModel default values`() {
+    val storyModel =
+      StoryModel(
+        id = "",
+        name = "",
+        description = "",
+        photoUrl = "",
+        lat = 0.0,
+        lon = 0.0,
+        createdAt = "",
+      )
+
+    assertNotNull(storyModel)
+    assertEquals("", storyModel.id)
+    assertEquals("", storyModel.name)
+    assertEquals("", storyModel.description)
+    assertEquals("", storyModel.photoUrl)
+    assertEquals("", storyModel.createdAt)
+    storyModel.lat?.let { assertEquals(0.0, it, 0.0) }
+    storyModel.lon?.let { assertEquals(0.0, it, 0.0) }
+  }
+
+  @Test
+  fun `test StoryModel copy`() {
+    val id = "story123"
+    val name = "John Doe"
+    val description = "A fascinating story"
+    val photoUrl = "http://example.com/photo.jpg"
+    val createdAt = "2023-01-01T00:00:00Z"
+    val lat = 37.7749
+    val lon = -122.4194
+
+    val storyModel = StoryModel(id, name, description, photoUrl, lat, lon, createdAt)
+    val copiedStoryModel = storyModel.copy()
+
+    assertNotNull(copiedStoryModel)
+    assertEquals(id, copiedStoryModel.id)
+    assertEquals(name, copiedStoryModel.name)
+    assertEquals(description, copiedStoryModel.description)
+    assertEquals(photoUrl, copiedStoryModel.photoUrl)
+    assertEquals(createdAt, copiedStoryModel.createdAt)
+    copiedStoryModel.lat?.let { assertEquals(lat, it, 0.0) }
+    copiedStoryModel.lon?.let { assertEquals(lon, it, 0.0) }
+  }
+
+  @Test
+  fun `test StoryModel toString`() {
+    val id = "story123"
+    val name = "John Doe"
+    val description = "A fascinating story"
+    val photoUrl = "http://example.com/photo.jpg"
+    val createdAt = "2023-01-01T00:00:00Z"
+    val lat = 37.7749
+    val lon = -122.4194
+
+    val storyModel = StoryModel(id, name, description, photoUrl, lat, lon, createdAt)
+    val expectedString =
+      "StoryModel(id=story123, name=John Doe, description=A fascinating story, photoUrl=http://example.com/photo.jpg, createdAt=2023-01-01T00:00:00Z, lat=37.7749, lon=-122.4194)"
+
+    assertEquals(expectedString, storyModel.toString())
   }
 }

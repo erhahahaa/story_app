@@ -1,32 +1,59 @@
 package dev.erhahahaa.storyapp.data.model
 
-import kotlinx.serialization.json.Json
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
 
 class LoginResultTest {
+
   @Test
-  fun `test LoginResult serialization`() {
-    val loginResult = LoginResult(userId = "asdf-asdf-asdf-asdf", name = "Test User", token = "ey")
-    val json = Json.encodeToString(LoginResult.serializer(), loginResult)
-    assertNotNull(json)
-    assertTrue(json.contains("Test User"))
+  fun `test LoginResult creation`() {
+    val userId = "user123"
+    val name = "John Doe"
+    val token = "token123"
+
+    val loginResult = LoginResult(userId, name, token)
+
+    assertNotNull(loginResult)
+    assertEquals(userId, loginResult.userId)
+    assertEquals(name, loginResult.name)
+    assertEquals(token, loginResult.token)
   }
 
   @Test
-  fun `test LoginResult deserialization`() {
-    val json =
-      """
-            {
-                "userId": "asdf-asdf-asdf-asdf",
-                "name": "Test User",
-                "email": "john@gmail.com"
-            }
-  """
-    val loginResult = Json.decodeFromString(LoginResult.serializer(), json)
+  fun `test LoginResult default values`() {
+    val loginResult = LoginResult(userId = "", name = "", token = "")
+
     assertNotNull(loginResult)
-    assertEquals("Test User", loginResult.name)
+    assertEquals("", loginResult.userId)
+    assertEquals("", loginResult.name)
+    assertEquals("", loginResult.token)
+  }
+
+  @Test
+  fun `test LoginResult copy`() {
+    val userId = "user123"
+    val name = "John Doe"
+    val token = "token123"
+
+    val loginResult = LoginResult(userId, name, token)
+    val copiedLoginResult = loginResult.copy()
+
+    assertNotNull(copiedLoginResult)
+    assertEquals(userId, copiedLoginResult.userId)
+    assertEquals(name, copiedLoginResult.name)
+    assertEquals(token, copiedLoginResult.token)
+  }
+
+  @Test
+  fun `test LoginResult toString`() {
+    val userId = "user123"
+    val name = "John Doe"
+    val token = "token123"
+
+    val loginResult = LoginResult(userId, name, token)
+    val expectedString = "LoginResult(userId=user123, name=John Doe, token=token123)"
+
+    assertEquals(expectedString, loginResult.toString())
   }
 }

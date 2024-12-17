@@ -40,22 +40,12 @@ class StoryViewModel(private val storyRepository: StoryRepository) : ViewModel()
   private val _isFinishAddStory = MutableLiveData<Boolean>()
   val isLoading: LiveData<Boolean> = _isFinishAddStory
 
-  //  var page: Int? = null
-  //  private val _hasMoreData = MutableLiveData<Boolean>()
-  //  val hasMoreData: LiveData<Boolean> = _hasMoreData
-
   fun getStoriesWithLocation(token: String) {
     viewModelScope.launch {
       val result = storyRepository.getStories(token, null, null, LocationParam.WITH_LOCATION)
       _storiesWithLocation.postValue(result)
     }
   }
-
-  // fun loadMoreStories(token: String) {
-  //   if (_hasMoreData.value == false) return
-  //   page = page?.plus(1)
-  //   getStories(token)
-  // }
 
   fun addStory(token: String, file: File, description: String, lat: Double?, lon: Double?) {
     viewModelScope.launch {

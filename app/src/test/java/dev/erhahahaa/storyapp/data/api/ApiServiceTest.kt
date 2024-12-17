@@ -112,39 +112,6 @@ class ApiServiceTest {
     assertNotNull(response)
   }
 
-  //
-  //  @Test
-  //  fun `test addStoryGuest with invalid data`(): Unit = runBlocking {
-  //    val description = ""
-  //    val photo = mock(MultipartBody.Part::class.java)
-  //    val lat = 0.0
-  //    val lon = 0.0
-  //
-  //    `when`(apiService.addStoryGuest(description, photo, lat, lon))
-  //      .thenThrow(RuntimeException("Invalid data"))
-  //
-  //    try {
-  //      apiService.addStoryGuest(description, photo, lat, lon)
-  //    } catch (e: Exception) {
-  //      assertNotNull(e)
-  //    }
-  //  }
-  //
-  //  @Test
-  //  fun `test addStoryGuest with valid data`() = runBlocking {
-  //    val mockResponse: EmptyResponse = mockGeneric()
-  //    val description = "description"
-  //    val photo = mock(MultipartBody.Part::class.java)
-  //    val lat = 0.0
-  //    val lon = 0.0
-  //
-  //    `when`(apiService.addStoryGuest(description, photo, lat, lon)).thenReturn(mockResponse)
-  //
-  //    val response = apiService.addStoryGuest(description, photo, lat, lon)
-  //
-  //    assertNotNull(response)
-  //  }
-
   @Test
   fun `test getStories with invalid token`(): Unit = runBlocking {
     `when`(apiService.getStories("")).thenThrow(RuntimeException("Invalid token"))
@@ -197,7 +164,7 @@ class ApiServiceTest {
     val mockResponse: StoriesResponse = mockGeneric()
     val page = 1
     val size = 10
-    val location = LocationParam.WITH_LOCATION
+    val location = LocationParam.WITH_LOCATION.value
 
     `when`(apiService.getStories(FakeData.TOKEN, page, size, location)).thenReturn(mockResponse)
 
