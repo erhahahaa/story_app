@@ -15,6 +15,7 @@ import com.google.android.material.navigation.NavigationView
 import dev.erhahahaa.storyapp.R
 import dev.erhahahaa.storyapp.databinding.ActivityHomeBinding
 import dev.erhahahaa.storyapp.ui.greeting.GreetingActivity
+import dev.erhahahaa.storyapp.utils.EspressoIdlingResource
 import dev.erhahahaa.storyapp.utils.extensions.getViewModelFactory
 import dev.erhahahaa.storyapp.viewmodel.MainViewModel
 
@@ -57,8 +58,10 @@ class HomeActivity : AppCompatActivity() {
     navView.setNavigationItemSelectedListener { item ->
       when (item.itemId) {
         R.id.action_logout -> {
+          EspressoIdlingResource.increment()
           mainViewModel.logout()
           navigateToGreeting()
+          EspressoIdlingResource.decrement()
           true
         }
         R.id.action_map -> {

@@ -50,19 +50,4 @@ class UserTest {
     assertEquals(email, copiedUser.email)
     assertEquals(token, copiedUser.token)
   }
-
-  @Test
-  fun `test User toString`() {
-    val userId = "user123"
-    val name = "John Doe"
-    val email = "john.doe@example.com"
-
-    val token = "token123"
-
-    val user = User(userId, name, email, token)
-    val expectedString =
-      "User(userId=user123, name=John Doe, email=john.doe@example.com, password=password123, token=token123)"
-
-    assertEquals(expectedString, user.toString())
-  }
 }

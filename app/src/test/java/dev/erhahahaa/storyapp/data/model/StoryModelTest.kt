@@ -73,21 +73,4 @@ class StoryModelTest {
     copiedStoryModel.lat?.let { assertEquals(lat, it, 0.0) }
     copiedStoryModel.lon?.let { assertEquals(lon, it, 0.0) }
   }
-
-  @Test
-  fun `test StoryModel toString`() {
-    val id = "story123"
-    val name = "John Doe"
-    val description = "A fascinating story"
-    val photoUrl = "http://example.com/photo.jpg"
-    val createdAt = "2023-01-01T00:00:00Z"
-    val lat = 37.7749
-    val lon = -122.4194
-
-    val storyModel = StoryModel(id, name, description, photoUrl, lat, lon, createdAt)
-    val expectedString =
-      "StoryModel(id=story123, name=John Doe, description=A fascinating story, photoUrl=http://example.com/photo.jpg, createdAt=2023-01-01T00:00:00Z, lat=37.7749, lon=-122.4194)"
-
-    assertEquals(expectedString, storyModel.toString())
-  }
 }

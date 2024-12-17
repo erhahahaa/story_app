@@ -53,6 +53,7 @@ class StoryViewModel(private val storyRepository: StoryRepository) : ViewModel()
       val result = storyRepository.addStory(token, file, description, lat, lon)
       _isFinishAddStory.postValue(false)
       _addStoryResult.postValue(result)
+      setToken(token)
     }
   }
 

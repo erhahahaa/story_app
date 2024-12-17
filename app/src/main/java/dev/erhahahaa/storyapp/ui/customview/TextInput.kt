@@ -21,6 +21,7 @@ class TextInput
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
   LinearLayout(context, attrs, defStyleAttr), View.OnTouchListener {
+
   private val labelTextView: TextView
   private val inputEditText: EditText
   private val errorTextView: TextView
@@ -50,6 +51,11 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     inputEditText = findViewById(R.id.inputEditText)
     errorTextView = findViewById(R.id.errorTextView)
 
+    this.isFocusable = true
+    this.isFocusableInTouchMode = true
+    inputEditText.isFocusable = true
+    inputEditText.isFocusableInTouchMode = true
+
     context.obtainStyledAttributes(attrs, R.styleable.TextInput, defStyleAttr, 0).apply {
       labelTextView.text = getString(R.styleable.TextInput_labelText) ?: "Label"
 
@@ -65,6 +71,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
       }
       recycle()
     }
+
     isObscured = inputEditText.inputType == 129
     if (isObscured) setupToggleVisibility()
 
@@ -147,6 +154,12 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
   fun addTextChangedListener(textWatcher: TextWatcher) {
     inputEditText.addTextChangedListener(textWatcher)
+  }
+
+  override fun onCreateInputConnection(
+    outAttrs: android.view.inputmethod.EditorInfo?
+  ): android.view.inputmethod.InputConnection? {
+    return inputEditText.onCreateInputConnection(outAttrs)
   }
 
   override fun onTouch(v: View?, event: MotionEvent?): Boolean {

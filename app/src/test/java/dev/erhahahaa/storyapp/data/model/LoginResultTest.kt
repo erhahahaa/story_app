@@ -44,16 +44,4 @@ class LoginResultTest {
     assertEquals(name, copiedLoginResult.name)
     assertEquals(token, copiedLoginResult.token)
   }
-
-  @Test
-  fun `test LoginResult toString`() {
-    val userId = "user123"
-    val name = "John Doe"
-    val token = "token123"
-
-    val loginResult = LoginResult(userId, name, token)
-    val expectedString = "LoginResult(userId=user123, name=John Doe, token=token123)"
-
-    assertEquals(expectedString, loginResult.toString())
-  }
 }

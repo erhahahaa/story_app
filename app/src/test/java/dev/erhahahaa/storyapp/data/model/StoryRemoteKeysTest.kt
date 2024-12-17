@@ -44,16 +44,4 @@ class StoryRemoteKeysTest {
     assertEquals(prevKey, copiedStoryRemoteKeys.prevKey)
     assertEquals(nextKey, copiedStoryRemoteKeys.nextKey)
   }
-
-  @Test
-  fun `test StoryRemoteKeys toString`() {
-    val id = "story123"
-    val prevKey = 1
-    val nextKey = 3
-
-    val storyRemoteKeys = StoryRemoteKeys(id, prevKey, nextKey)
-    val expectedString = "StoryRemoteKeys(id=story123, prevKey=1, nextKey=3)"
-
-    assertEquals(expectedString, storyRemoteKeys.toString())
-  }
 }

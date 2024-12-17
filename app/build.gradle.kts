@@ -54,43 +54,49 @@ dependencies {
   implementation(libs.androidx.lifecycle.livedata.ktx)
   implementation(libs.androidx.navigation.fragment.ktx)
   implementation(libs.androidx.navigation.ui.ktx)
+  implementation(libs.androidx.espresso.contrib)
+  implementation(libs.androidx.espresso.intents)
+  implementation(libs.androidx.uiautomator)
   testImplementation(libs.junit)
   testImplementation(libs.junit.jupiter)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
 
   //  ViewModel related dependencies
-  implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
+  implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
   //  UI
-  implementation("com.github.bumptech.glide:glide:4.16.0")
+  implementation(libs.glide)
   implementation(libs.androidx.swiperefreshlayout)
 
   //  API related dependencies
-  implementation("com.squareup.retrofit2:retrofit:2.11.0")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-  implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.11.0")
-  implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+  implementation(libs.retrofit)
+  implementation(libs.kotlinx.serialization.json)
+  implementation(libs.converter.kotlinx.serialization)
+  implementation(libs.logging.interceptor)
   implementation(libs.play.services.location)
 
   //  Storage dependencies
-  implementation("androidx.datastore:datastore-preferences:1.1.1")
-  implementation("androidx.room:room-runtime:2.6.1")
-  implementation("androidx.room:room-ktx:2.6.1")
-  ksp("androidx.room:room-compiler:2.6.1")
+  implementation(libs.androidx.datastore.preferences)
+  implementation(libs.androidx.room.runtime)
+  implementation(libs.androidx.room.ktx)
+  ksp(libs.androidx.room.compiler)
 
   // Maps dependencies
-  implementation("com.google.android.gms:play-services-maps:19.0.0")
-  implementation("com.google.android.gms:play-services-location:21.3.0")
+  implementation(libs.play.services.maps)
+  implementation(libs.play.services.location)
 
   //  Paging dependencies
-  implementation("androidx.paging:paging-runtime:3.3.5")
-  implementation("androidx.room:room-paging:2.6.1")
+  implementation(libs.androidx.paging.runtime)
+  implementation(libs.androidx.paging.runtime.ktx)
+  implementation(libs.androidx.room.paging)
 
   // Testing dependencies
-  testImplementation("org.mockito:mockito-core:5.14.2")
-  testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+  implementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.mockito.core)
+  testImplementation(libs.mockito.kotlin)
   mockitoAgent("org.mockito:mockito-core:5.14.2") { isTransitive = false }
+  testImplementation(libs.androidx.core.testing)
 }
 
 tasks.withType<Test> { jvmArgs("-javaagent:${mockitoAgent.asPath}") }
