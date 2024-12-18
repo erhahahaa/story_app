@@ -61,6 +61,7 @@
       android:imeOptions="actionDone"
       app:autofillHints="password"
       app:hintText="@string/enter_password"
+      app:inputType="textPassword"
       app:labelText="@string/prompt_password"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
