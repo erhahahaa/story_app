@@ -43,7 +43,7 @@ class StoryAdapter(private val onItemClick: (StoryModel) -> Unit) :
   }
 
   companion object {
-    private val STORY_COMPARATOR =
+    val STORY_COMPARATOR =
       object : DiffUtil.ItemCallback<StoryModel>() {
         override fun areItemsTheSame(oldItem: StoryModel, newItem: StoryModel): Boolean {
           return oldItem.id == newItem.id
