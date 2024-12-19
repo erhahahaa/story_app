@@ -112,7 +112,7 @@ class StoryViewModelTest {
       assertEquals(dummyStories.size, actualItemCount)
 
       val firstItem = actualStories?.getFirstItem()
-      assertEquals("Story 1", firstItem?.name)
+      assertEquals(dummyStories[0], firstItem)
     } finally {
       storyViewModel.stories.removeObserver(observer)
     }
